@@ -29,10 +29,19 @@ captureBtn.addEventListener('click', () => {
   const toneNumber = matchCyanometer(avgColor);
 
   // Mostrar resultado sobre la imagen
-  const toneColor = cyanometerTones.find(t => t.tone === toneNumber);
-  toneOverlay.style.backgroundColor = `rgb(${toneColor.r}, ${toneColor.g}, ${toneColor.b})`;
-  toneOverlay.textContent = toneNumber;
-  toneOverlay.style.display = 'flex';
+const toneColor = cyanometerTones.find(t => t.tone === toneNumber);
+
+// Dibujar rectángulo sobre la imagen en el canvas
+const boxSize = 60;
+ctx.fillStyle = `rgb(${toneColor.r}, ${toneColor.g}, ${toneColor.b})`;
+ctx.fillRect(canvas.width - boxSize - 20, 20, boxSize, boxSize);
+
+// Dibujar número dentro del rectángulo
+ctx.fillStyle = "white";
+ctx.font = "bold 20px 'Roboto Mono'";
+ctx.textAlign = "center";
+ctx.textBaseline = "middle";
+ctx.fillText(toneNumber, canvas.width - boxSize / 2 - 20, 20 + boxSize / 2);
 
   // Ocultar video y mostrar canvas
   video.style.display = 'none';
