@@ -1,0 +1,37 @@
+body {
+  font-family: sans-serif;
+  text-align: center;
+  background: #f2f8ff;
+  color: #333;
+}
+
+video {
+  width: 90%;
+  max-width: 400px;
+  margin-top: 10px;
+  border-radius: 12px;
+}
+
+#canvas {
+  display: block;
+  margin: 10px auto;
+  border-radius: 12px;
+  max-width: 400px;
+  width: 90%;
+}
+
+button {
+  padding: 10px 20px;
+  margin: 15px 5px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  background: #3273dc;
+  color: white;
+  cursor: pointer;
+}
+
+#result {
+  margin-top: 15px;
+  font-size: 18px;
+}
