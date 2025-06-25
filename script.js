@@ -4,10 +4,12 @@ const captureBtn = document.getElementById('capture');
 const result = document.getElementById('result');
 const downloadBtn = document.getElementById('download');
 
-nnavigator.mediaDevices.getUserMedia({
+// Solicita acceso a la cámara trasera si está disponible
+navigator.mediaDevices.getUserMedia({
   video: {
-    facingMode: "environment"
-  }
+    facingMode: { ideal: "environment" }  // preferiblemente cámara trasera
+  },
+  audio: false
 })
 .then(stream => {
   video.srcObject = stream;
@@ -15,9 +17,6 @@ nnavigator.mediaDevices.getUserMedia({
 .catch(error => {
   console.error("No se pudo acceder a la cámara:", error);
 });
-  .then(stream => {
-    video.srcObject = stream;
-  });
 
 captureBtn.addEventListener('click', () => {
   const ctx = canvas.getContext('2d');
@@ -53,7 +52,6 @@ function getAverageColor(data) {
   };
 }
 
-// Aproximación simple: tono = más azul, menos rojo y verde
 function matchCyanometer({r, g, b}) {
   const blueRatio = b - (r + g) / 2;
   let tone = Math.floor((blueRatio / 127) * 53);
