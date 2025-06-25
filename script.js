@@ -1,11 +1,12 @@
 const video = document.getElementById('video');
 const canvas = document.getElementById('canvas');
 const captureBtn = document.getElementById('capture');
-const result = document.getElementById('result');
 const downloadBtn = document.getElementById('download');
-const toneBox = document.getElementById('toneBox');
+const resetBtn = document.getElementById('reset');
+const toneOverlay = document.getElementById('toneOverlay');
+const afterCapture = document.getElementById('afterCapture');
 
-// Cámara trasera preferida
+// Cámara trasera
 navigator.mediaDevices.getUserMedia({
   video: { facingMode: { ideal: "environment" } },
   audio: false
@@ -25,19 +26,37 @@ captureBtn.addEventListener('click', () => {
 
   const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
   const avgColor = getAverageColor(imageData.data);
-  const cyanometerTone = matchCyanometer(avgColor);
+  const toneNumber = matchCyanometer(avgColor);
 
-  result.innerHTML = `Tono aproximado del cianómetro: <strong>${cyanometerTone}</strong>`;
-  ctx.font = "30px serif";
-  ctx.fillStyle = "white";
-  ctx.fillText(`Tono: ${cyanometerTone}`, 20, 40);
+  // Mostrar resultado sobre la imagen
+  const toneColor = cyanometerTones.find(t => t.tone === toneNumber);
+  toneOverlay.style.backgroundColor = `rgb(${toneColor.r}, ${toneColor.g}, ${toneColor.b})`;
+  toneOverlay.textContent = toneNumber;
+  toneOverlay.style.display = 'flex';
 
-  const toneColor = cyanometerTones.find(t => t.tone === cyanometerTone);
-  toneBox.style.backgroundColor = `rgb(${toneColor.r}, ${toneColor.g}, ${toneColor.b})`;
-  toneBox.style.display = 'block';
+  // Ocultar video y mostrar canvas
+  video.style.display = 'none';
+  canvas.style.display = 'block';
 
-  canvas.style.display = "block";
-  downloadBtn.style.display = "inline-block";
+  // Mostrar acciones post-captura
+  afterCapture.style.display = 'block';
+  captureBtn.style.display = 'none';
+});
+
+downloadBtn.addEventListener('click', () => {
+  const link = document.createElement('a');
+  link.download = 'cianometro_cielo.png';
+  link.href = canvas.toDataURL();
+  link.click();
+});
+
+resetBtn.addEventListener('click', () => {
+  // Resetear la vista
+  canvas.style.display = 'none';
+  video.style.display = 'block';
+  toneOverlay.style.display = 'none';
+  captureBtn.style.display = 'inline-block';
+  afterCapture.style.display = 'none';
 });
 
 function getAverageColor(data) {

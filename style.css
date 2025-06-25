@@ -12,38 +12,47 @@ h1 {
   line-height: 1.4;
 }
 
-#overlay {
+.camera-container {
   position: relative;
   width: 100%;
-  max-width: 480px;
+  max-width: 360px;
   margin: 0 auto;
+  aspect-ratio: 1 / 1;
 }
 
-video {
+video, canvas {
   width: 100%;
-  max-width: 480px;
+  aspect-ratio: 1 / 1;
   border-radius: 12px;
+  object-fit: cover;
   display: block;
-}
-
-#toneBox {
-  width: 60px;
-  height: 60px;
   position: absolute;
-  top: 10px;
-  right: 10px;
-  border-radius: 8px;
-  border: 2px solid white;
-  box-shadow: 0 0 5px rgba(0,0,0,0.2);
-  z-index: 10;
+  top: 0;
+  left: 0;
 }
 
 canvas {
-  display: block;
-  margin: 15px auto;
-  border-radius: 12px;
-  max-width: 480px;
-  width: 100%;
+  display: none;
+  z-index: 2;
+}
+
+#toneOverlay {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  border: 2px solid white;
+  background-color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+  z-index: 3;
+  box-shadow: 0 0 8px rgba(0,0,0,0.2);
 }
 
 button {
@@ -57,7 +66,6 @@ button {
   cursor: pointer;
 }
 
-#result {
-  margin-top: 15px;
-  font-size: 18px;
+.actions {
+  margin-top: 20px;
 }

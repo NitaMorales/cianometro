@@ -10,16 +10,18 @@
 <body>
   <h1>de qué color es tu cielo hoy<br>según Saussure</h1>
 
-  <div id="overlay">
+  <div class="camera-container">
     <video id="video" autoplay playsinline></video>
-    <div id="toneBox" style="display: none;"></div>
+    <canvas id="canvas"></canvas>
+    <div id="toneOverlay" style="display: none;"></div>
   </div>
 
   <button id="capture">📸 tomar foto</button>
 
-  <canvas id="canvas" style="display:none;"></canvas>
-  <div id="result"></div>
-  <button id="download" style="display:none;">💾 descargar imagen</button>
+  <div class="actions" id="afterCapture" style="display: none;">
+    <button id="download">💾 descargar imagen</button>
+    <button id="reset">🔄 empezar de nuevo</button>
+  </div>
 
   <script src="script.js"></script>
 </body>
