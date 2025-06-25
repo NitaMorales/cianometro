@@ -4,7 +4,17 @@ const captureBtn = document.getElementById('capture');
 const result = document.getElementById('result');
 const downloadBtn = document.getElementById('download');
 
-navigator.mediaDevices.getUserMedia({ video: true })
+nnavigator.mediaDevices.getUserMedia({
+  video: {
+    facingMode: "environment"
+  }
+})
+.then(stream => {
+  video.srcObject = stream;
+})
+.catch(error => {
+  console.error("No se pudo acceder a la cámara:", error);
+});
   .then(stream => {
     video.srcObject = stream;
   });
