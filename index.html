@@ -1,17 +1,25 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
   <meta charset="UTF-8">
   <title>Cianómetro</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Cianómetro</h1>
+  <h1>de qué color es tu cielo hoy<br>según Saussure</h1>
+  
   <video id="video" autoplay playsinline></video>
-  <button id="capture">📸 Tomar foto del cielo</button>
+  
+  <div id="overlay">
+    <div id="toneBox" style="display: none;"></div>
+  </div>
+
+  <button id="capture">📸 tomar foto</button>
+  
   <canvas id="canvas" style="display:none;"></canvas>
   <div id="result"></div>
-  <button id="download" style="display:none;">💾 Descargar imagen</button>
+  <button id="download" style="display:none;">💾 descargar imagen</button>
 
   <script src="script.js"></script>
 </body>

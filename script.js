@@ -116,6 +116,11 @@ captureBtn.addEventListener('click', () => {
   const avgColor = getAverageColor(imageData.data);
   const cyanometerTone = matchCyanometer(avgColor);
 
+  const toneColor = cyanometerTones.find(t => t.tone === cyanometerTone);
+const toneBox = document.getElementById('toneBox');
+toneBox.style.backgroundColor = `rgb(${toneColor.r}, ${toneColor.g}, ${toneColor.b})`;
+toneBox.style.display = 'block';
+
   result.innerHTML = `Tono aproximado del cianómetro: <strong>${cyanometerTone}</strong>`;
   ctx.font = "30px serif";
   ctx.fillStyle = "white";
