@@ -3,8 +3,9 @@ const canvas = document.getElementById('canvas');
 const captureBtn = document.getElementById('capture');
 const result = document.getElementById('result');
 const downloadBtn = document.getElementById('download');
+const toneBox = document.getElementById('toneBox');
 
-// Preferir cámara trasera
+// Cámara trasera preferida
 navigator.mediaDevices.getUserMedia({
   video: { facingMode: { ideal: "environment" } },
   audio: false
@@ -15,6 +16,63 @@ navigator.mediaDevices.getUserMedia({
 .catch(error => {
   console.error("No se pudo acceder a la cámara:", error);
 });
+
+captureBtn.addEventListener('click', () => {
+  const ctx = canvas.getContext('2d');
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  const avgColor = getAverageColor(imageData.data);
+  const cyanometerTone = matchCyanometer(avgColor);
+
+  result.innerHTML = `Tono aproximado del cianómetro: <strong>${cyanometerTone}</strong>`;
+  ctx.font = "30px serif";
+  ctx.fillStyle = "white";
+  ctx.fillText(`Tono: ${cyanometerTone}`, 20, 40);
+
+  const toneColor = cyanometerTones.find(t => t.tone === cyanometerTone);
+  toneBox.style.backgroundColor = `rgb(${toneColor.r}, ${toneColor.g}, ${toneColor.b})`;
+  toneBox.style.display = 'block';
+
+  canvas.style.display = "block";
+  downloadBtn.style.display = "inline-block";
+});
+
+function getAverageColor(data) {
+  let r = 0, g = 0, b = 0;
+  for (let i = 0; i < data.length; i += 4) {
+    r += data[i];
+    g += data[i + 1];
+    b += data[i + 2];
+  }
+  const pixelCount = data.length / 4;
+  return {
+    r: Math.round(r / pixelCount),
+    g: Math.round(g / pixelCount),
+    b: Math.round(b / pixelCount)
+  };
+}
+
+function matchCyanometer({r, g, b}) {
+  let closest = cyanometerTones[0];
+  let minDist = Number.MAX_VALUE;
+
+  cyanometerTones.forEach(tone => {
+    const dist = Math.sqrt(
+      Math.pow(r - tone.r, 2) +
+      Math.pow(g - tone.g, 2) +
+      Math.pow(b - tone.b, 2)
+    );
+    if (dist < minDist) {
+      minDist = dist;
+      closest = tone;
+    }
+  });
+
+  return closest.tone;
+}
 
 const cyanometerTones = [
   { tone: 1, r: 172, g: 184, b: 196 },
@@ -71,64 +129,6 @@ const cyanometerTones = [
   { tone: 52, r: 1, g: 1, b: 4 },
   { tone: 53, r: 0, g: 0, b: 2 }
 ];
-
-function matchCyanometer({r, g, b}) {
-  let closest = cyanometerTones[0];
-  let minDist = Number.MAX_VALUE;
-
-  cyanometerTones.forEach(tone => {
-    const dist = Math.sqrt(
-      Math.pow(r - tone.r, 2) +
-      Math.pow(g - tone.g, 2) +
-      Math.pow(b - tone.b, 2)
-    );
-    if (dist < minDist) {
-      minDist = dist;
-      closest = tone;
-    }
-  });
-
-  return closest.tone;
-}
-
-function getAverageColor(data) {
-  let r = 0, g = 0, b = 0;
-  for (let i = 0; i < data.length; i += 4) {
-    r += data[i];
-    g += data[i + 1];
-    b += data[i + 2];
-  }
-  const pixelCount = data.length / 4;
-  return {
-    r: Math.round(r / pixelCount),
-    g: Math.round(g / pixelCount),
-    b: Math.round(b / pixelCount)
-  };
-}
-
-captureBtn.addEventListener('click', () => {
-  const ctx = canvas.getContext('2d');
-  canvas.width = video.videoWidth;
-  canvas.height = video.videoHeight;
-  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-  const avgColor = getAverageColor(imageData.data);
-  const cyanometerTone = matchCyanometer(avgColor);
-
-  const toneColor = cyanometerTones.find(t => t.tone === cyanometerTone);
-const toneBox = document.getElementById('toneBox');
-toneBox.style.backgroundColor = `rgb(${toneColor.r}, ${toneColor.g}, ${toneColor.b})`;
-toneBox.style.display = 'block';
-
-  result.innerHTML = `Tono aproximado del cianómetro: <strong>${cyanometerTone}</strong>`;
-  ctx.font = "30px serif";
-  ctx.fillStyle = "white";
-  ctx.fillText(`Tono: ${cyanometerTone}`, 20, 40);
-
-  canvas.style.display = "block";
-  downloadBtn.style.display = "inline-block";
-});
 
 downloadBtn.addEventListener('click', () => {
   const link = document.createElement('a');
